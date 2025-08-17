@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Personas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        .card-persona {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-persona img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .datos {
+            flex-grow: 1;
+        }
+
+        .nombre {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .estrellas {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .boton-seleccionar {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .boton-seleccionar:hover {
+            background-color: #218838;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <div class="container py-5">
+        <h2 class="mb-4">Se encontró los siguientes cuidadores de mascota</h2>
+        <div id="cuidador-list"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const lista = document.getElementById("cuidador-list");
+            const data = localStorage.getItem("cuidadoresMascotas") || "[]";
+            const cuidadores = JSON.parse(data);
+
+            if (cuidadores.length === 0) {
+                lista.innerHTML = `<div class="alert alert-warning">No hay cuidadores registrados.</div>`;
+                return;
+            }
+
+            cuidadores.forEach((cuidador, index) => {
+                const card = document.createElement("div");
+                card.className = "card-persona bg-white";
+                card.innerHTML = `
+                    <img src="persona${(index % 6) + 1}.jpg" alt="Cuidador ${index + 1}">
+                    <div class="datos">
+                        <div class="nombre">${cuidador.nombres}</div>
+                        <div>Edad: ${cuidador.edad}</div>
+                        <div>Domicilio: ${cuidador.domicilio}</div>
+                        <div>Celular: ${cuidador.celular}</div>
+                        <div>Experiencia: ${cuidador.experiencia}</div>
+                    </div>
+                    <div class="estrellas">
+                        <div>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star text-warning"></i>
+                            <i class="bi bi-star text-warning"></i>
+                        </div>
+                        <button class="boton-seleccionar ms-3">
+                            <i class="bi bi-check-circle"></i>
+                            Seleccionar
+                        </button>
+                    </div>
+                `;
+                lista.appendChild(card);
+            });
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

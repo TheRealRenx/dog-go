@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cuidadores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            /* Eliminamos background-color: #e9f7ef; para que se vea la imagen de fondo */
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('gatitos3.jpg'); /* URL de tu imagen de fondo */
+            background-size: cover; /* Ajusta la imagen para cubrir todo el body */
+            background-repeat: no-repeat; /* Evita que la imagen se repita */
+            background-position: center center; /* Centra la imagen */
+            background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95); /* Fondo blanco semitransparente para que se vea la imagen */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2,
+        h5 {
+            color: #117a8b;
+        }
+
+        label {
+            color: #495057;
+        }
+
+        /* Estilos adicionales para los botones de Bootstrap, si los necesitas, para que coincidan con la estética */
+        .btn-primary {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-primary:hover {
+            background-color: #138496;
+            border-color: #138496;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="menu-container"></div>
+    <div class="container">
+        <h2 class="mb-4">Registro de Cuidadores de Mascotas</h2>
+
+        <form id="form-cuidador">
+            <div class="mb-3">
+                <label for="nombres" class="form-label">Nombres Completos</label>
+                <input type="text" class="form-control" id="nombres" required>
+            </div>
+            <div class="mb-3">
+                <label for="edad" class="form-label">Edad</label>
+                <input type="number" class="form-control" id="edad" min="18" required>
+            </div>
+            <div class="mb-3">
+                <label for="dni" class="form-label">DNI</label>
+                <input type="text" class="form-control" id="dni" required>
+            </div>
+            <div class="mb-3">
+                <label for="domicilio" class="form-label">Domicilio</label>
+                <input type="text" class="form-control" id="domicilio" required>
+            </div>
+            <div class="mb-3">
+                <label for="celular" class="form-label">Número de Celular</label>
+                <input type="text" class="form-control" id="celular" required>
+            </div>
+            <div class="mb-3">
+                <label for="experiencia" class="form-label">Experiencia como cuidador</label>
+                <textarea class="form-control" id="experiencia" rows="4" required></textarea>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Registrar</button>
+                <a href="listCuidadores.html" class="btn btn-success">Ver registros</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('form-cuidador').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const nuevoCuidador = {
+                nombres: document.getElementById('nombres').value,
+                edad: document.getElementById('edad').value,
+                dni: document.getElementById('dni').value,
+                domicilio: document.getElementById('domicilio').value,
+                celular: document.getElementById('celular').value,
+                experiencia: document.getElementById('experiencia').value
+            };
+
+            const cuidadores = JSON.parse(localStorage.getItem('cuidadoresMascotas')) || [];
+            cuidadores.push(nuevoCuidador);
+            localStorage.setItem('cuidadoresMascotas', JSON.stringify(cuidadores));
+
+            alert('Cuidador registrado correctamente.');
+            this.reset();
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

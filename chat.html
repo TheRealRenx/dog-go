@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Estilo WhatsApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #ece5dd;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background-color: #075e54;
+      color: white;
+      padding: 15px 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .chat-messages {
+      padding: 20px;
+      height: 450px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-color: #e5ddd5;
+    }
+
+    .message {
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 75%;
+      word-wrap: break-word;
+      position: relative;
+    }
+
+    .user {
+      background-color: #dcf8c6;
+      align-self: flex-end;
+    }
+
+    .bot {
+      background-color: #ffffff;
+      align-self: flex-start;
+      border: 1px solid #ccc;
+    }
+
+    .nombre {
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      background-color: #f0f0f0;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    button {
+      background-color: #25d366;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1ebe5d;
+    }
+
+    @media (max-width: 600px) {
+      .chat-container {
+        margin: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="chat-container">
+    <div class="chat-header" id="chat-header">Chat con ...</div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+      <input type="text" id="message" placeholder="Escribe un mensaje...">
+      <button onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    const chat = document.getElementById('chat-messages');
+
+    async function sendMessage() {
+      const messageInput = document.getElementById('message');
+      const text = messageInput.value.trim();
+      if (text === '') return;
+
+      crearMensaje("Tú", text, 'user');
+      messageInput.value = '';
+      messageInput.focus();
+
+      // Esperar respuesta de Gemini
+      const respuesta = await obtenerRespuestaIA(text);
+      const nombre = localStorage.getItem("nombreSeleccionado") || "desconocido";
+
+      crearMensaje(nombre, respuesta, 'bot');
+    }
+
+    function crearMensaje(nombre, texto, tipo) {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', tipo);
+
+      const nombreDiv = document.createElement('div');
+      nombreDiv.classList.add('nombre');
+      nombreDiv.textContent = nombre;
+
+      const textoDiv = document.createElement('div');
+      textoDiv.textContent = texto;
+
+      msgDiv.appendChild(nombreDiv);
+      msgDiv.appendChild(textoDiv);
+      chat.appendChild(msgDiv);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    // 🔑 Función para llamar a Gemini API
+    async function obtenerRespuestaIA(prompt) {
+      const apiKey = "AIzaSyApXrD_dGawDRMSLn3_whP_Q4iNpz_YO6M"; // Tu API key
+      const model = 'gemini-2.5-pro';
+      const api = 'streamGenerateContent';
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:${api}?key=${apiKey}`;
+
+      let nuevoPrompt = "Actua todo el tiempo como un cuidador de mascotas humano, vamos a coordinar el servicio para que cuides mi mascote, que tus mensajes sean cortos y precisos:  "+prompt
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: 'user',
+                parts: [
+                  { text: nuevoPrompt }
+                ]
+              }
+            ],
+            generationConfig: {
+              thinkingConfig: {
+                thinkingBudget: -1,
+              },
+              responseMimeType: 'text/plain'
+            },
+            tools: [{ googleSearch: {} }]
+          })
+        });
+
+        const data = await response.json();
+
+        // 🔧 NUEVO: Unir todos los textos si hay varios objetos en el array
+        if (Array.isArray(data)) {
+          return data.map(obj => obj?.candidates?.[0]?.content?.parts?.[0]?.text || "").join("");
+        }
+
+        // Si por alguna razón no es array, usar este fallback
+        return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No entendí tu mensaje.";
+
+      } catch (error) {
+        console.error("Error al obtener respuesta:", error);
+        return "Ocurrió un error al contactar a la IA.";
+      }
+    }
+  </script>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

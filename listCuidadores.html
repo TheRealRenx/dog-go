@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuidadores Registrados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            /* Eliminamos background-color: #eef5f9; para mostrar la imagen */
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('perrito1.jpg'); /* URL de tu imagen de fondo */
+            background-size: cover; /* Ajusta la imagen para cubrir todo el body */
+            background-repeat: no-repeat; /* Evita que la imagen se repita */
+            background-position: center center; /* Centra la imagen */
+            background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95); /* Fondo blanco semitransparente para que se vea la imagen */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card h5 {
+            color: #117a8b;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #17a2b8; /* Añadido para un mejor estilo */
+            padding-bottom: 5px; /* Añadido para un mejor estilo */
+        }
+
+        .card p {
+            margin: 4px 0;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="menu-container"></div>
+    <div class="container">
+        <h2 class="mb-4 text-center">Cuidadores Registrados</h2>
+        <div id="contenedor"></div>
+        <div class="text-center">
+            <a href="registerCuidadores.html" class="btn btn-secondary mt-3">Volver al registro</a>
+        </div>
+    </div>
+
+    <script>
+        const contenedor = document.getElementById('contenedor');
+        const cuidadores = JSON.parse(localStorage.getItem('cuidadoresMascotas')) || [];
+
+        if (cuidadores.length > 0) {
+            contenedor.innerHTML = cuidadores.map((cuidador, i) => `
+                <div class="card">
+                    <h5>Cuidador #${i + 1}</h5>
+                    <p><strong>Nombres:</strong> ${cuidador.nombres}</p>
+                    <p><strong>Edad:</strong> ${cuidador.edad}</p>
+                    <p><strong>DNI:</strong> ${cuidador.dni}</p>
+                    <p><strong>Domicilio:</strong> ${cuidador.domicilio}</p>
+                    <p><strong>Celular:</strong> ${cuidador.celular}</p>
+                    <p><strong>Experiencia:</strong> ${cuidador.experiencia}</p>
+                </div>
+            `).join('');
+        } else {
+            contenedor.innerHTML = `<div class="alert alert-warning">No hay cuidadores registrados aún.</div>`;
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
