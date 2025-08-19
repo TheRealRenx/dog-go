@@ -57,9 +57,15 @@
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 800px;
-            /* Ancho máximo del contenedor */
             margin-left: auto;
             margin-right: auto;
+        }
+
+        #map {
+            width: 100%;
+            height: 500px;
+            /* igual que el iframe anterior */
+            border: none;
         }
 
         iframe {
@@ -156,10 +162,7 @@
         <h1>Buscar Cuidador de Mascotas</h1>
 
         <div class="map-container">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15607.301389478442!2d-77.03759905!3d-12.046374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c5f87b35f2ef%3A0x6a0c5c3b1e3b3b3b!2sLima!5e0!3m2!1ses-419!2spe!4v1700000000000!5m2!1ses-419!2spe"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
+            <div id="map"></div>
         </div>
 
         <form id="data-form">
@@ -203,6 +206,8 @@
     </div>
 
     <script src="script.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDk5FHU2w_fSNYC7Cx3zSvXpAZNKUbapzE&callback=initMap"></script>
+
 </body>
 
 </html>
